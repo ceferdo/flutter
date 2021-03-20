@@ -1,5 +1,6 @@
 import 'package:base/components/PlacarJogo.dart';
 import 'package:base/components/ResultadoJogo.dart';
+import 'package:base/repository/PlacarRepository.dart';
 import 'package:flutter/material.dart';
 
 List<ResultadoJogo> _resultados = [
@@ -52,26 +53,21 @@ class _MyAppState extends State<_Lista> {
             )
           ],
         ),
-        body: ListView.builder(
-          itemCount: _resultados.length,
-          itemBuilder: (context, index) {
-            return InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            ResultadoView(_resultados[index])),
-                  );
-                },
-                child: new Card(
-                  child: PlacarJogo(new ResultadoJogo(
-                      _resultados[index].adversario1,
-                      _resultados[index].adversario2,
-                      _resultados[index].resultado1,
-                      _resultados[index].resultado2)),
-                ));
-          },
+        body: Container(
+          child: FutureBuilder(
+              future: PlacarRepository.list(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+                return ListView.builder(
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (context, index) {
+                      return new Card(
+                        child: PlacarJogo(snapshot.data[index]),
+                      );
+                    });
+              }),
         ),
       ),
     );
@@ -181,7 +177,7 @@ class CadastroView extends StatelessWidget {
                   var novoResultado = new ResultadoJogo(
                       pais1.text, pais2.text, placar1.text, placar2.text);
                   _resultados.add(novoResultado);
-
+                  PlacarRepository.save(novoResultado);
                   Navigator.of(context).pop();
                 },
                 color: Colors.red,
@@ -193,11 +189,6 @@ class CadastroView extends StatelessWidget {
           ),
         ));
 
-    // Passo 1: Capturar os dados digitados nos campos
-    // Passo 2: Inclurir um novo objeto na Lista
-    // Passo 3: Voltar para a lista
-    //  Navigator.of(context).pop();
-    // Passo 4: ao retornar a lista, atualizar o estado do componente
-    // setState(() {});
+
   }
 }
