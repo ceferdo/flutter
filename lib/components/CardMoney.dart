@@ -12,14 +12,31 @@ class CardMoney extends StatelessWidget {
         margin: EdgeInsets.all(10),
         alignment: Alignment.center,
         child: Card(
-          child: Column(
-            children: [
-              Text("Moeda: ${this.data["name"]}"),
-              Text("Valor Venda: ${this.data["buy"]}"),
-              Text("Valor Compra: ${this.data["sell"]}"),
-              Text("Variação: ${this.data["variation"]}"),
-            ],
-          ),
-        ));
+            elevation: 5,
+            child: SizedBox(
+              height: 90,
+              width: 350,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    (this.data["name"].toString()),
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    ((this.data["buy"] * this.valorReal).toString()),
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  Text(
+                    ((this.data["sell"] * this.valorReal).toString()),
+                    style: TextStyle(fontSize: 16),
+                  ),
+                  Text(
+                    (this.data["variation"].toString()),
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ],
+              ),
+            )));
   }
 }

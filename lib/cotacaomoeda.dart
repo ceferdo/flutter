@@ -53,8 +53,6 @@ class _HomeState extends State<Home> {
                       } else {
                         valorReal = 1;
                       }
-
-                      
                     });
                   },
                 ),
