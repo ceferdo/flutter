@@ -1,5 +1,4 @@
 import 'package:base/components/ResultadoJogo.dart';
-import 'package:flutter/rendering.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -13,7 +12,7 @@ class PlacarRepository {
   static _dataBaseManager() async {
     final int versiondb = 1;
     final pathDatabase = await getDatabasesPath();
-    final localDatabase = join(pathDatabase, "jogos.db");
+    final localDatabase = join(pathDatabase, "jogos2.db");
     var bd = await openDatabase(localDatabase, version: versiondb,
         onCreate: (db, versiondb) {
       String sql =
@@ -39,10 +38,10 @@ class PlacarRepository {
 
   static Future list() async {
     Database bd = await _dataBaseManager();
-    List listaResultados = await bd.rawQuery("select * from jogos");
+    List listaTesultados = await bd.rawQuery("select * from jogos");
 
     var _jogos = new List();
-    for (var item in listaResultados) {
+    for (var item in listaTesultados) {
       var result = new ResultadoJogo(
           item['pais1'], item['pais2'], item['resultado1'], item['resultado2']);
       result.id = item['id'];
@@ -64,5 +63,10 @@ class PlacarRepository {
 
     bd.update("jogos", dadosResultado,
         where: "id = ?", whereArgs: [resultado.id]);
+  }
+  
+    static delete(int resultadoId) async {
+    Database db = await _dataBaseManager();
+    return await db.delete('jogos', where: 'id = ?', whereArgs: [resultadoId]);
   }
 }
